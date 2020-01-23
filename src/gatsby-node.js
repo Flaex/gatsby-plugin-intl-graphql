@@ -1,21 +1,6 @@
 const webpack = require("webpack")
 const { createJson, makeQuery } = require("./handle")
 
-function flattenMessages(nestedMessages, prefix = "") {
-  return Object.keys(nestedMessages).reduce((messages, key) => {
-    let value = nestedMessages[key]
-    let prefixedKey = prefix ? `${prefix}.${key}` : key
-
-    if (typeof value === "string") {
-      messages[prefixedKey] = value
-    } else {
-      Object.assign(messages, flattenMessages(value, prefixedKey))
-    }
-
-    return messages
-  }, {})
-}
-
 exports.onCreateWebpackConfig = ({ actions, plugins }, pluginOptions) => {
   const { redirectComponent = null, languages, defaultLanguage } = pluginOptions
   if (!languages.includes(defaultLanguage)) {
@@ -82,7 +67,7 @@ exports.onCreatePage = async ({ page, actions }, pluginOptions) => {
       // TODO load yaml here
       const messages = require(`${path}/${language}.json`)
 
-      return flattenMessages(messages)
+      return messages
     } catch (error) {
       if (error.code === "MODULE_NOT_FOUND") {
         process.env.NODE_ENV !== "test" &&
