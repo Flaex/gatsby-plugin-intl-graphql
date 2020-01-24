@@ -4,34 +4,35 @@ import { _writeOnce, _write, _sanitizate } from "./helpers"
 
 const loopLangs = (langs, callback) => langs.forEach(lng => callback(lng))
 
-
 export function createJson(path, languages) {
-    // One language
-    if (languages.length === 1) {
-        _writeOnce(path, languages)
-    }
+  // One language
+  if (languages.length === 1) {
+    _writeOnce(path, languages)
+  }
 
-    // Multiples languages
-    languages.forEach(lang => {
-        _writeOnce(path, lang)
-    })
+  // Multiples languages
+  languages.forEach(lang => {
+    _writeOnce(path, lang)
+  })
 }
 
-export async function makeQuery({path, url, query, languages}) {
-    const endpoint = url.includes('graphql') ? 
-            url : (url.endsWith('/') ? url + 'graphql' : url+'/graphql')
+export async function makeQuery({ path, url, query, languages }) {
+  const endpoint = url.includes("graphql")
+    ? url
+    : url.endsWith("/")
+    ? url + "graphql"
+    : url + "/graphql"
 
-    try {
-        const response = await request(endpoint, query)
+  try {
+    const response = await request(endpoint, query)
 
-            loopLangs(languages, (lng) => {
-                const singlePath = `${path}/${lng}.json`
-    
-                _write(singlePath, response, lng)
-                _sanitizate(singlePath)
-            })
+    loopLangs(languages, lng => {
+      const singlePath = `${path}/${lng}.json`
 
-    } catch (e) {
-        throw new Error('Was an error: ', e);
-    }
+      _write(singlePath, response, lng)
+      _sanitizate(singlePath)
+    })
+  } catch (e) {
+    throw new Error("Was an error: ", e)
+  }
 }

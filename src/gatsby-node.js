@@ -29,21 +29,21 @@ exports.sourceNodes = (_, options) => {
   const {
     url = "http://localhost:1337",
     path = ".",
-    languages = ['en'],
+    languages = ["en"],
     query = null,
-  } = options;
+  } = options
 
   if (!query) {
     return
   }
-  
+
   createJson(path, languages) // Jsons
 
   const config = {
     path,
     url,
     query,
-    languages
+    languages,
   }
 
   makeQuery(config)
