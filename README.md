@@ -31,8 +31,8 @@ _Feel free to send us PR to add your project._
 
 ## How to use
 
->**Note**: Para que este plugin pueda funcionar, se necesita de antemano instalar el plugin de graphql en el Backend (Strapi, see more [here](https://strapi.io/documentation/3.0.0-beta.x/plugins/graphql.html#usage))
->
+<!-- >**Note**: Para que este plugin pueda funcionar, se necesita de antemano instalar el plugin de graphql en el Backend (Strapi, see more [here](https://strapi.io/documentation/3.0.0-beta.x/plugins/graphql.html#usage)) -->
+
 >**Note**: This plugin works with graphql layer, for this you need install the necessary backend plugin (Strapi, you can see more [here](https://strapi.io/documentation/3.0.0-beta.x/plugins/graphql.html#usage))
 
 ### Install package
