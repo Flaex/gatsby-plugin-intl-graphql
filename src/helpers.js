@@ -65,10 +65,8 @@ export async function _sanitizate(path) {
       }
     }
 
-    setTimeout(() => {
-      const str = JSON.stringify(res, null, 2)
-      fs.outputFileSync(path, str)
-    }, 1000)
+    const str = JSON.stringify(res, null, 2)
+    fs.outputFileSync(path, str)
 
     console.log("Clean success")
   } catch (e) {
