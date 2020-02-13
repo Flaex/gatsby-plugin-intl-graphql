@@ -37,7 +37,7 @@ exports.sourceNodes = (_, options) => {
     return
   }
 
-  createJson(path, languages) // Jsons
+  createJson(path, languages) // Create initial JSON
 
   const config = {
     path,
@@ -46,6 +46,7 @@ exports.sourceNodes = (_, options) => {
     languages,
   }
 
+  // Make a request and save the data
   makeQuery(config)
 }
 
@@ -57,7 +58,7 @@ exports.onCreatePage = async ({ page, actions }, pluginOptions) => {
   const { createPage, deletePage } = actions
   const {
     path = ".",
-    languages = ["en"],
+    languages = "en",
     defaultLanguage = "en",
     redirect = false,
   } = pluginOptions
