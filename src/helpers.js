@@ -1,4 +1,6 @@
 import fs from "fs-extra"
+import { print } from "console-colors"
+
 
 // Lambda function to get the information about file
 const template = lng => JSON.parse(`{"static":{"lang":"${lng}"}}`)
@@ -13,11 +15,12 @@ export async function _writeOnce(path, lang = "en") {
   try {
     // If file exist don't write anything
     const res = await fs.readJson(singlePath)
-    console.log("The files already exists")
+    print("l-red", "intl-graphql", "The files already exists")
   } catch (e) {
     // If not exist write the initial JSON
     fs.outputJson(singlePath, template(lang))
-      .then(() => console.log("Files created succesfully"))
+      // .then(() => console.log("Files created succesfully"))
+      .then(() => print("l-red", "intl-graphql", "Files created succesfully"))
       .catch(e => console.error("Was an error: ", e))
   }
 }
@@ -38,7 +41,7 @@ export function _write(path, content, lang) {
 
     // And save it
     fs.outputFileSync(path, str)
-    console.log("Write files success")
+    print("l-red", "intl-graphql", "Write files success")
   } catch (e) {
     throw new Error("Was an error: ", e)
   }
@@ -88,7 +91,7 @@ export async function _sanitizate(path) {
     // Then save it
     fs.outputFileSync(path, str)
 
-    console.log("Clean success")
+    print("l-red", "intl-graphql", "Clean success")
   } catch (e) {
     throw new Error(e)
   }
