@@ -15,12 +15,12 @@ export async function _writeOnce(path, lang = "en") {
   try {
     // If file exist don't write anything
     const res = await fs.readJson(singlePath)
-    print("l-red", "intl-graphql", "The files already exists")
+    print("green", "cyan", "success","intl-graphql", `The file for ${lang} language already exists`)
   } catch (e) {
     // If not exist write the initial JSON
     fs.outputJson(singlePath, template(lang))
       // .then(() => console.log("Files created succesfully"))
-      .then(() => print("l-red", "intl-graphql", "Files created succesfully"))
+      .then(() => print("green", "cyan", "success","intl-graphql", `The file for ${lang} language created`))
       .catch(e => console.error("Was an error: ", e))
   }
 }
@@ -41,7 +41,7 @@ export function _write(path, content, lang) {
 
     // And save it
     fs.outputFileSync(path, str)
-    print("l-red", "intl-graphql", "Write files success")
+    print("green", "cyan", "success","intl-graphql", `Writing querys for ${lang} file`)
   } catch (e) {
     throw new Error("Was an error: ", e)
   }
@@ -91,7 +91,7 @@ export async function _sanitizate(path) {
     // Then save it
     fs.outputFileSync(path, str)
 
-    print("l-red", "intl-graphql", "Clean success")
+    print("green", "cyan", "success","intl-graphql", `content field suffix cleanup`)
   } catch (e) {
     throw new Error(e)
   }
