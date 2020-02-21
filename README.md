@@ -18,9 +18,9 @@ When you build multilingual sites, Google recommends using different URLs for ea
 
 ## Starters
 
-Demo: [http://gatsby-starter-default-intl.netlify.com](http://gatsby-starter-default-intl.netlify.com)
+Demo: [http://gatsby-starter-default-intl-graphql.netlify.com](https://gatsby-starter-default-intl-graphql.netlify.com/)
 
-Source: [https://github.com/wiziple/gatsby-plugin-intl/tree/master/examples/gatsby-starter-default-intl](https://github.com/wiziple/gatsby-plugin-intl/tree/master/examples/gatsby-starter-default-intl)
+Source: [https://github.com/Davejs136/gatsby-plugin-intl-graphql/tree/master/examples/gatsby-starter-default-intl-graphql](https://github.com/Davejs136/gatsby-plugin-intl-graphql/tree/master/examples/gatsby-starter-default-intl-graphql)
 
 ## Showcase
 
@@ -150,8 +150,8 @@ see the following sample:
 
 | language resource file                                                                                                              | language |
 | ----------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| [src/lang/en.json](https://github.com/wiziple/gatsby-plugin-intl/blob/master/examples/gatsby-starter-default-intl/src/intl/en.json) | English  |
-| [src/lang/es.json](https://github.com/wiziple/gatsby-plugin-intl/blob/master/examples/gatsby-starter-default-intl/src/intl/ko.json) | Spanish   |
+| [src/lang/en.json](https://github.com/Davejs136/gatsby-plugin-intl-graphql/tree/master/examples/gatsby-starter-default-intl-graphql/src/lang/en.json) | English  |
+| [src/lang/es.json](https://github.com/Davejs136/gatsby-plugin-intl-graphql/tree/master/examples/gatsby-starter-default-intl-graphql/src/lang/es.json) | Spanish   |
 
 So, having the previous result, we can access the `messages` object, this object contains all the json data.
 
