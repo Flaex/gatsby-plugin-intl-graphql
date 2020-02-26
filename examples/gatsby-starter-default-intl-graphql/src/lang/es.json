@@ -1,0 +1,41 @@
+{
+  "static": {
+    "seo": {
+      "title": "Gastby Español"
+    },
+    "main_title": "Hola gente",
+    "welcome": "Bienvenido al nuevo sitio de Gatsby.",
+    "description": "Ahora construimos algo asombroso.",
+    "go_to": "ir a página 2",
+    "post": "ver artículos",
+    "page_two": {
+      "title": "Página dos",
+      "head": "Hola! Desde la pagina 2",
+      "description": "Bienvenido a la página 2",
+      "go_to": "regresa a la página principal"
+    },
+    "articles": {
+      "main_title": "Bienvenido a los artículos"
+    },
+    "footer": "Built with",
+    "lang": "es"
+  },
+  "articles": [
+    {
+      "id": "1",
+      "title": "first article",
+      "content": {
+        "title": "Como tener control de tus notificaciones",
+        "description": "regularmente algunos sitios web y aplicaciones añaden mensajes de alerta a tu dispositivo, pero hay formas de minimizar este hecho."
+      }
+    },
+    {
+      "id": "2",
+      "title": "second article",
+      "content": {
+        "title": "Conoces tu telefono ?",
+        "description": "Aqui se explica todo acerca de los telefonos! Desde simples telefonos a los telefonos inteligentes."
+      }
+    }
+  ]
+}

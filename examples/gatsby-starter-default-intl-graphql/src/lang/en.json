@@ -1,0 +1,41 @@
+{
+  "static": {
+    "seo": {
+      "title": "Gastby English"
+    },
+    "main_title": "Hi people",
+    "welcome": "Welcome to your new Gatsby site.",
+    "description": "Now go build something great.",
+    "go_to": "Go to page 2",
+    "post": "see articles",
+    "page_two": {
+      "title": "Page two",
+      "head": "Hi from second page",
+      "description": "Welcome to page 2",
+      "go_to": "Go back to the homepage"
+    },
+    "articles": {
+      "main_title": "Welcome to articles"
+    },
+    "footer": "Construido con",
+    "lang": "en"
+  },
+  "articles": [
+    {
+      "id": "1",
+      "title": "first article",
+      "content": {
+        "title": "How to Take Control of Your Notifications",
+        "description": "Apps and websites regularly push alerts to your devices, but there are ways to minimize disruption and still stay in the loop."
+      }
+    },
+    {
+      "id": "2",
+      "title": "second article",
+      "content": {
+        "title": "You know your phone ?",
+        "description": "Here explains all about the phones! From simple phones to smartphones."
+      }
+    }
+  ]
+}
