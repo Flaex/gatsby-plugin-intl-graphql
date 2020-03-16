@@ -1,5 +1,7 @@
 import fs from "fs-extra"
-import { print } from "console-colors"
+import colors from "console-colors"
+
+const { print, colors:{ green, cyan, reset }} = colors
 
 
 // Lambda function to get the information about file
@@ -15,12 +17,13 @@ export async function _writeOnce(path, lang = "en") {
   try {
     // If file exist don't write anything
     const res = await fs.readJson(singlePath)
-    print("green", "cyan", "success","intl-graphql", `The file for ${lang} language already exists`)
+    // print("green", "cyan", "success","intl-graphql", `The file for ${lang} language already exists`)
+    print`${green}success ${cyan}intl-graphql ${reset}The file for "x" language already exists`
   } catch (e) {
     // If not exist write the initial JSON
     fs.outputJson(singlePath, template(lang))
-      // .then(() => console.log("Files created succesfully"))
-      .then(() => print("green", "cyan", "success","intl-graphql", `The file for ${lang} language created`))
+      // .then(() => print(`The file for ${lang} language created`)
+      .then(() => print`${green}success ${cyan}intl-graphql ${reset}The file for "x" language created`)
       .catch(e => console.error("Was an error: ", e))
   }
 }
@@ -41,7 +44,8 @@ export function _write(path, content, lang) {
 
     // And save it
     fs.outputFileSync(path, str)
-    print("green", "cyan", "success","intl-graphql", `Writing querys for ${lang} file`)
+    // print("green", "cyan", "success","intl-graphql", `Writing querys for ${lang} file`)
+    print`${green}success ${cyan}intl-graphql ${reset}Writing querys for "x" file`
   } catch (e) {
     throw new Error("Was an error: ", e)
   }
@@ -91,7 +95,8 @@ export async function _sanitizate(path) {
     // Then save it
     fs.outputFileSync(path, str)
 
-    print("green", "cyan", "success","intl-graphql", `content field suffix cleanup`)
+    // print("green", "cyan", "success","intl-graphql", `content field suffix cleanup`)
+    print`${green}success ${cyan}intl-graphql ${reset}Content field suffix cleanup`
   } catch (e) {
     throw new Error(e)
   }
