@@ -1,8 +1,10 @@
 import fs from "fs-extra"
 import colors from "console-colors"
+import { request } from "graphql-request"
 
 const { print, colors:{ green, cyan, reset }} = colors
 
+/* --------------- Lambda Functions --------------- */
 
 // Lambda function to get the information about file
 const template = lng => JSON.parse(`{"static":{"lang":"${lng}"}}`)
@@ -10,49 +12,54 @@ const template = lng => JSON.parse(`{"static":{"lang":"${lng}"}}`)
 // Regex to find the match and change it to needed object
 const find = lng => new RegExp(`content_${lng}`, "g")
 
-// write the initial object in the file
-export async function _writeOnce(path, lang = "en") {
-  const singlePath = `${path}/${lang}.json`
 
+/* --------------- Helpers Functions --------------- */
+
+// Write el needed JSON file
+async function _write(path, content = '') {
+  // Extract the language from path
+  const lang = path.match(/[a-z]{2}\./gi)[0].split('').splice(0,2).join('')
+  
+  // If exist then create
   try {
-    // If file exist don't write anything
-    const res = await fs.readJson(singlePath)
-    // print("green", "cyan", "success","intl-graphql", `The file for ${lang} language already exists`)
-    print`${green}success ${cyan}intl-graphql ${reset}The file for ${lang} language already exists `
-  } catch (e) {
-    // If not exist write the initial JSON
-    fs.outputJson(singlePath, template(lang))
-      // .then(() => print(`The file for ${lang} language created`)
-      .then(() => print`${green}success ${cyan}intl-graphql ${reset}The file for ${lang} language created `)
-      .catch(e => console.error("Was an error: ", e))
-  }
-}
+    // read the JSON file
+    const data = await fs.readJson(path)
 
-// Read existing files and later push new elements
-export function _write(path, content, lang) {
-  try {
-    // Read the JSON file
-    const data = fs.readJsonSync(path)
+    if (!content) {
 
-    // Loop the query data and write in the JSON file
-    for (const i in content) {
-      data[i] = content[i]
+      print`${green}success ${cyan}intl-graphql ${reset}The file for ${lang} language already exists `
+
+    } else {
+      // Loop the query data and write in the JSON file
+      for (const i in content) {
+        data[i] = content[i]
+      }
+
+      // Transform in string
+      const str = JSON.stringify(data)
+
+      // Save the new data
+      fs.outputFileSync(path, str)
+
+      print`${green}success ${cyan}intl-graphql ${reset}Writing querys for ${lang} file `
+
     }
 
-    // Transform in String
-    const str = JSON.stringify(data)
-
-    // And save it
-    fs.outputFileSync(path, str)
-    // print("green", "cyan", "success","intl-graphql", `Writing querys for ${lang} file`)
-    print`${green}success ${cyan}intl-graphql ${reset}Writing querys for ${lang} file `
   } catch (e) {
-    throw new Error("Was an error: ", e)
+    // Else create the path with its json files needed
+
+    fs.outputJson(path, template(lang))
+      .then(() => 
+        print`${green}success ${cyan}intl-graphql ${reset}The file for ${lang} language created `
+      )
+      .catch(e => console.error(e.error))
+
+      console.log(e)
   }
 }
 
 // Clean the JSON
-export async function _sanitizate(path) {
+async function _sanitizate(path) {
   try {
     // Read JSON
     const res = await fs.readJson(path)
@@ -99,5 +106,48 @@ export async function _sanitizate(path) {
     print`${green}success ${cyan}intl-graphql ${reset}Content field suffix cleanup `
   } catch (e) {
     throw new Error(e)
+  }
+}
+
+/* --------------- Main Functions --------------- */
+
+// Create the initials JSON
+export function createInitialJson(pathname, languages) {
+
+  languages.forEach(lang => {
+    const path = `${pathname}/${lang}.json`
+    _write(path)
+  })
+}
+
+// Make the query and extract data to write in the needed file
+export async function modifyContent({ path, url, query, languages }) {
+
+  // If the url isn't completed then modify it
+  // http://localhost:1337/ turn to http://localhost:1337/graphql
+  // http://localhost:1337 turn to http://localhost:1337/graphql
+  const endpoint = url.includes("graphql")
+    ? url
+    : url.endsWith("/")
+      ? url + "graphql"
+      : url + "/graphql"
+
+  try {
+    // Make the query
+    const response = await request(endpoint, query)
+
+    // Loop languages
+    languages.forEach(lang => {
+      const pathname = `${path}/${lang}.json`
+
+      // Rewrite the existing JSON
+      _write(pathname, response)
+
+      // Clean the JSON languages file
+      _sanitizate(pathname)
+    })
+
+  } catch (e) {
+    throw new Error("Was an error: ", e.error)
   }
 }

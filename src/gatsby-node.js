@@ -1,5 +1,5 @@
 const webpack = require("webpack")
-const { createJson, makeQuery } = require("./handle")
+const { createInitialJson, modifyContent } = require("./handle")
 
 exports.onCreateWebpackConfig = ({ actions, plugins }, pluginOptions) => {
   const { redirectComponent = null, languages, defaultLanguage } = pluginOptions
@@ -37,17 +37,11 @@ exports.sourceNodes = (_, options) => {
     return
   }
 
-  createJson(path, languages) // Create initial JSON
-
-  const config = {
-    path,
-    url,
-    query,
-    languages,
-  }
+  // Create initial JSONs
+  createInitialJson(path, languages)
 
   // Make a request and save the data
-  makeQuery(config)
+  modifyContent(options)
 }
 
 exports.onCreatePage = async ({ page, actions }, pluginOptions) => {
