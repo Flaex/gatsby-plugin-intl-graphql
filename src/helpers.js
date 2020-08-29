@@ -8,9 +8,6 @@ import axios from "axios"
 // Lambda function to get the information about file
 const template = lng => JSON.parse(`{"static":{"lang":"${lng}"}}`)
 
-// Regex to find the match and change it to needed object
-const find = lng => new RegExp(`content_${lng}`, "g")
-
 
 /* --------------- Helpers Functions --------------- */
 
@@ -34,8 +31,6 @@ async function _write(path, content = '') {
         data[i] = content[i]
       }
 
-      console.log('from _write: ', content)
-
       // Transform in string
       const str = JSON.stringify(data)
 
@@ -48,14 +43,12 @@ async function _write(path, content = '') {
 
   } catch (e) {
     // Else create the path with its json files needed
-
-    fs.outputJson(path, template(lang))
-      .then(() => 
-        println`{green}success {cyan}intl-graphql {reset}The file for ${lang} language created `
-      )
-      .catch(e => console.error(e.error))
-
-      console.log(e)
+    try {
+      await fs.outputJson(path, template(lang))
+      println`{green}success {cyan}intl-graphql {reset}The file for ${lang} language created `
+    } catch (e) {
+      console.error(e.error)
+    }
   }
 }
 
@@ -111,7 +104,6 @@ async function checkLoginUser({url, identifier, password}) {
 
   try {
     const { data } = await axios.post(uri, {identifier, password})
-
     return data.jwt
   } catch (e) {
     throw new Error(e)
