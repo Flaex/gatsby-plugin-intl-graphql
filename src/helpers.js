@@ -1,8 +1,7 @@
 import fs from "fs-extra"
-import colors from "console-colors"
-import { request } from "graphql-request"
-
-const { print, colors:{ green, cyan, reset }} = colors
+import { println } from "console-colors"
+import { request, GraphQLClient } from "graphql-request"
+import axios from "axios"
 
 /* --------------- Lambda Functions --------------- */
 
@@ -27,7 +26,7 @@ async function _write(path, content = '') {
 
     if (!content) {
 
-      print`${green}success ${cyan}intl-graphql ${reset}The file for ${lang} language already exists `
+      println`{green}success {cyan}intl-graphql {reset}The file for ${lang} language already exists `
 
     } else {
       // Loop the query data and write in the JSON file
@@ -35,13 +34,15 @@ async function _write(path, content = '') {
         data[i] = content[i]
       }
 
+      console.log('from _write: ', content)
+
       // Transform in string
       const str = JSON.stringify(data)
 
       // Save the new data
       fs.outputFileSync(path, str)
 
-      print`${green}success ${cyan}intl-graphql ${reset}Writing querys for ${lang} file `
+      println`{green}success {cyan}intl-graphql {reset}Writing querys for ${lang} file `
 
     }
 
@@ -50,7 +51,7 @@ async function _write(path, content = '') {
 
     fs.outputJson(path, template(lang))
       .then(() => 
-        print`${green}success ${cyan}intl-graphql ${reset}The file for ${lang} language created `
+        println`{green}success {cyan}intl-graphql {reset}The file for ${lang} language created `
       )
       .catch(e => console.error(e.error))
 
@@ -59,54 +60,63 @@ async function _write(path, content = '') {
 }
 
 // Clean the JSON
-async function _sanitizate(path) {
+async function cleanup(path) {
   try {
     // Read JSON
     const res = await fs.readJson(path)
+    const str = JSON.stringify(res)
 
     // Get the "lang" object
     const lang = res.static.lang
 
-    // Loop the JSON object
-    for (const x in res) {
-      const el = res[x]
+    if (!str.includes(`content_${lang}`)) return
 
-      for (const i in el) {
-        const prop = el[i]
+    delete res.static
 
-        for (let [key, value] of Object.entries(prop)) {
-          // If don't find then continue the process
-          if (!key.match("content_")) {
-            continue
-          } else {
-            // If find the "content_", then replace it for "content"
-            if (!find(lang).test(key)) {
-              delete prop[key]
-            } else {
-              const newkey = key.slice(0, -3)
-              prop[newkey] = value
-              delete prop[key]
-
-              if (value == null) {
-                delete prop[newkey]
-              }
-            }
-          }
-        }
+    const temp = {
+      static: {
+        lang
       }
     }
 
+    Object.entries(res).forEach(item => {
+      item.forEach(el => {
+        if (typeof el === 'object') {
+          let index = Object.keys(el).findIndex(content => content === `content_${lang}`)
+          let content = {'content': Object.values(el)[index]}
+          temp[item[0]] = content
+        }
+      })
+    })
+
     // Save the new data as String
-    const str = JSON.stringify(res, null, 2)
+    const stringify = JSON.stringify(temp, null, 2)
 
     // Then save it
-    fs.outputFileSync(path, str)
+    fs.outputFileSync(path, stringify)
 
     // print("green", "cyan", "success","intl-graphql", `content field suffix cleanup`)
-    print`${green}success ${cyan}intl-graphql ${reset}Content field suffix cleanup `
+    println`{green}success {cyan}intl-graphql {reset}Content field suffix cleanup `
   } catch (e) {
     throw new Error(e)
   }
+}
+
+// Check user data
+async function checkLoginUser({url, identifier, password}) {
+  // Complete endpoint
+  const uri = `${url}auth/local`
+
+  if (!identifier && !password) return
+
+  try {
+    const { data } = await axios.post(uri, {identifier, password})
+
+    return data.jwt
+  } catch (e) {
+    throw new Error(e)
+  }
+
 }
 
 /* --------------- Main Functions --------------- */
@@ -121,8 +131,8 @@ export function createInitialJson(pathname, languages) {
 }
 
 // Make the query and extract data to write in the needed file
-export async function modifyContent({ path, url, query, languages }) {
-
+export async function modifyContent({ path, url, query, languages, loginData }) {
+  let response;
   // If the url isn't completed then modify it
   // http://localhost:1337/ turn to http://localhost:1337/graphql
   // http://localhost:1337 turn to http://localhost:1337/graphql
@@ -133,8 +143,25 @@ export async function modifyContent({ path, url, query, languages }) {
       : url + "/graphql"
 
   try {
-    // Make the query
-    const response = await request(endpoint, query)
+    // check if loginData no exist
+    if (!loginData.identifier && !loginData.password) {
+      response = await request(endpoint, query)
+    } else {
+      const jwt = await checkLoginUser({
+        url,
+        identifier: loginData.identifier,
+        password: loginData.password
+      })
+
+      response = await new GraphQLClient(endpoint, {
+        headers: {
+          authorization: `Bearer ${jwt}`
+        }
+      }).request(query)
+    }
+
+
+    // console.log(response)
 
     // Loop languages
     languages.forEach(lang => {
@@ -144,7 +171,7 @@ export async function modifyContent({ path, url, query, languages }) {
       _write(pathname, response)
 
       // Clean the JSON languages file
-      _sanitizate(pathname)
+      cleanup(pathname)
     })
 
   } catch (e) {
