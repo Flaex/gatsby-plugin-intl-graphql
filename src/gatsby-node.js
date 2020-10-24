@@ -28,16 +28,10 @@ exports.onCreateWebpackConfig = ({ actions, plugins }, pluginOptions) => {
 exports.sourceNodes = (_, options) => {
 
   const { 
-    url = "http://localhost:1337",
     path = ".",
     languages = ["en"],
-    query = null,
-    loginData = {}
   } = options
 
-  // if (!query) return
-
-  // Create initial JSONs
   createInitialJson(path, languages)
 
   // Make a request and save the data
