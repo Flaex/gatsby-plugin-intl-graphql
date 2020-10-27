@@ -22,12 +22,11 @@ async function _write(path, content = "") {
 
   // If exist then create
   try {
-    // read the JSON file
     const data = await fs.readJson(path)
 
     if (!content) {
       log(
-        chalk`{green success} {cyan intl-graphql} {white The file for ${lang} language already exists}`
+        chalk`{green success} {cyan intl-graphql} The file for ${lang} language already exists`
       )
     } else {
       // Loop the query data and write in the JSON file
@@ -35,14 +34,13 @@ async function _write(path, content = "") {
         data[i] = content[i]
       }
 
-      // Transform in string
-      const str = JSON.stringify(data)
+      const dataToString = JSON.stringify(data)
 
       // Save the new data
-      fs.outputFileSync(path, str)
+      fs.outputFileSync(path, dataToString)
 
       log(
-        chalk`{green success} {cyan intl-graphql} {white Writing querys for ${lang} file} `
+        chalk`{green success} {cyan intl-graphql} Writing queries for ${lang} language`
       )
     }
   } catch (e) {
@@ -50,7 +48,7 @@ async function _write(path, content = "") {
     try {
       await fs.outputJson(path, template(lang))
       log(
-        chalk`{green success} {cyan intl-graphql} {white The file for ${lang} language created} `
+        chalk`{green success} {cyan intl-graphql} The file for ${lang} language created `
       )
     } catch (e) {
       log(chalk`{red [ERROR]} {white _write}`)
