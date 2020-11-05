@@ -63,6 +63,9 @@ async function cleanup(path) {
     // Read JSON
     const res = await fs.readJson(path)
     const str = JSON.stringify(res)
+    const isStatic = !!res.static
+    const _static  = isStatic ? res.static : false
+    let temp = {}
 
     // Get the "lang" object
     const lang = res.static.lang
@@ -71,10 +74,18 @@ async function cleanup(path) {
 
     delete res.static
 
-    const temp = {
-      static: {
-        lang,
-      },
+    
+
+    if (isStatic) {
+      temp = {
+        static: { ..._static  },
+      }
+    } else {
+      temp = {
+        static: {
+          lang,
+        },
+      }
     }
 
     Object.entries(res).forEach(item => {
