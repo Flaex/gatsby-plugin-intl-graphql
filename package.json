@@ -12,6 +12,7 @@
     "@formatjs/intl-relativetimeformat": "^4.5.9",
     "browser-lang": "^0.1.0",
     "chalk": "^4.1.0",
+    "cross-env": "^7.0.3",
     "fs-extra": "^9.0.1",
     "graphql-request": "^3.3.0",
     "intl": "^1.2.5",
@@ -42,7 +43,7 @@
   "repository": "https://github.com/Novanet-Studio/gatsby-plugin-intl-graphql.git",
   "scripts": {
     "build": "babel src --out-dir . --ignore **/__tests__",
-    "prepare": "NODE_ENV=production npm run build",
+    "prepare": " cross-env NODE_ENV=development",
     "watch": "babel -w src --out-dir . --ignore **/__tests__",
     "format": "prettier --write {src,__tests__}/**/*.{js,jsx}",
     "test": "jest",
