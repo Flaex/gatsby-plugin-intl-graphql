@@ -42,7 +42,7 @@
   "repository": "https://github.com/Novanet-Studio/gatsby-plugin-intl-graphql.git",
   "scripts": {
     "build": "babel src --out-dir . --ignore **/__tests__",
-    "prepare": "NODE_ENV=production npm run build",
+    "prepare": " SET NODE_ENV=development",
     "watch": "babel -w src --out-dir . --ignore **/__tests__",
     "format": "prettier --write {src,__tests__}/**/*.{js,jsx}",
     "test": "jest",
